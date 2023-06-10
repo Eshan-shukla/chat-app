@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sign Up</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f1f1f1;
+		}
+		form {
+			background-color: #ffffff;
+			max-width: 500px;
+			margin: 50px auto;
+			padding: 30px;
+			border-radius: 5px;
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+		}
+		input[type=text], input[type=password] {
+			width: 100%;
+			padding: 10px;
+			margin: 8px 0;
+			display: inline-block;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 16px;
+		}
+		button[type=submit] {
+			background-color: #4CAF50;
+			color: white;
+			padding: 12px 20px;
+			margin: 8px 0;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+			float: right;
+		}
+		button[type=submit]:hover {
+			background-color: #45a049;
+		}
+        .passwords {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .passwords input {
+            flex: 1;
+            margin-right: 10px;
+        }
+	</style>
+</head>
+<body>
+	<!-- <div id="form"> -->
+    <form onsubmit="return validateForm()" action="/" method="post">
+		<h2>Create an account</h2>
+		<label for="username"><b>Username</b></label>
+		<input type="text" placeholder="Enter your username" id="username" name="username" required>
+
+
+        <div class="passwords">
+            <label for="password"><b>Password</b></label>
+            <input type="password" id="password1" placeholder="Enter your password" name="password1" required>
+            <label for="password2"><b>Confirm Password</b></label>
+            <input type="password" id="password2" placeholder="Confirm your password" name="password2" required>
+        </div>
+
+		<button type="submit" onclick="validateForm()">Sign Up</button>
+    </form>
+	<!-- </div> -->
+	<script>
+		function validateForm(){
+            var username = document.getElementById("username");
+            var un = username.value;
+			var password1 = document.getElementById("password1");
+			var ps1 = password1.value;
+			var password2 = document.getElementById("password2");
+			var ps2 = password2.value;
+
+			if(ps1 != ps2){
+				alert("Passwords do not match");
+				return false;
+			}else{
+
+                return true;
+			}
+		}
+	</script>
+</body>
+</html>
