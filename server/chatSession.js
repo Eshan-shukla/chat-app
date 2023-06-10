@@ -6,19 +6,17 @@ const map = new Map();
 
 wss.on("connection", (ws,req)=>{        
     var user = '';
-    //get the username from the req body and create a list of username, ws
+    
     ws.on('error', ()=>{
         console.error;
     });
 
-    
     //this function gets triggered when it receives a message from the client
     ws.on("message", (messageFromClient)=>{
         firstChar = messageFromClient.toString().charAt(0);
         if(firstChar=='@'){
             map.set(messageFromClient.toString(), ws);
             user = messageFromClient.toString();
-            console.log(user);
         }else{
             parsedMessage = JSON.parse(messageFromClient);
             var {source, destination, text} = parsedMessage;
@@ -33,13 +31,9 @@ wss.on("connection", (ws,req)=>{
         
                 }
                 c.send(JSON.stringify(msg));
-            }
-            
-            }); 
-
-        }
-             
-        
+            }       
+        }); 
+        }       
     });
 
     ws.on("close", ()=>{

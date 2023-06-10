@@ -18,7 +18,6 @@ app.get('/signup', (req,res)=>{
 //main chat page
 app.get('/chatPage', (req, res)=>{
     res.sendFile(__dirname + '/html/ui.html');
-    //res.sendFile('/home/eshan/Desktop/chatuitest.html')
 });
 
 app.get('/sendMessage.js', (req, res)=>{
@@ -42,7 +41,6 @@ app.post('/checkLogIn', (req,res)=>{
         }
     });
 });
-
 
 app.listen(PORT, ()=>{
     console.log(`server is running on ${PORT}`);

@@ -37,13 +37,11 @@ function sendMessage(){
     }else{
         var message = document.getElementById('message-input');
         var messageToSend = message.value;
-    
         const chatContainer = document.getElementById('message-list');
         const messageElement = document.createElement('div');
         messageElement.classList.add('chat-message', 'user-message');
         messageElement.textContent = messageToSend;
         chatContainer.appendChild(messageElement);
-
         u = '@'+username;
         let source = localStorage.getItem("username");
         const msg = {
@@ -52,10 +50,8 @@ function sendMessage(){
             text : messageToSend,
 
         }
-    
         wsServer.send(JSON.stringify(msg));
         message.value = '';
-
     }
     
 }
@@ -71,12 +67,10 @@ function addToList(){
     userElement.addEventListener('click', function() {
         selectUser(user);
     });
-
     userList.appendChild(userElement);
 
 }
 
-//
 function selectUser(user){
     var heading = document.getElementById('username');
     heading.textContent = user;
