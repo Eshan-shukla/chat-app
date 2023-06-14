@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Facebook Login Page</title>
-    <link rel="stylesheet" href="./sign-inPage.css" />
+    <link rel="stylesheet" href="http://81.111.75.45:8080/css" />
   </head>
   <body>
     <div class="content">
@@ -14,15 +14,26 @@
           <h1 class="logo">FlexChat</h1>
           <p>Connect with friends and the world around you on FlexChat.</p>
         </div>
-          <form>
-            <input type="text" placeholder="Username" required />
-            <input type="password" placeholder="Password" required>
-            <button class="login">Log In</button>
+          <form action="/checkLogIn" method="post">
+            <input type="text" id="username" placeholder="Username" name="username" required />
+            <input type="password" placeholder="Password" name="password1" required>
+            <button onclick="clearInput()" type="submit" class="login" id="button">Log In</button>
             <!-- <a href="#">Forgot Password ?</a> -->
             <hr>
-            <button type="submit" class="create-account">Create New Account</button>
+            <a href="/signup">
+              <button type="button" class="create-account">Create New Account</button>
+            </a>
           </form>
+          <script>
+		
+            function clearInput(){
+              let username = document.getElementById("username").value;
+              localStorage.setItem("username", username);
+              document.getElementById("button").value = "";
+            }
+          </script>
       </div>
     </div>
+    
   </body>
 </html>

@@ -8,11 +8,19 @@ const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.get('/', (req, res)=>{
-    res.sendFile(__dirname + '/html/loginPage/login.html');
+    res.sendFile(__dirname + '/html/loginPage/sign-in.html');
+});
+
+app.get('/css', (req, res) => {
+    res.sendFile(__dirname + '/html/loginPage/sign-inPage.css');
 });
 
 app.get('/signup', (req,res)=>{
-    res.sendFile(__dirname + '/html/signupPage/signup.html');
+    res.sendFile(__dirname + '/html/signupPage/sign-up.html');
+});
+
+app.get('/sucss', (req, res) => {
+    res.sendFile(__dirname + '/html/signupPage/sign-up.css');
 });
 
 //main chat page
@@ -23,6 +31,12 @@ app.get('/chatPage', (req, res)=>{
 app.get('/sendMessage.js', (req, res)=>{
     res.sendFile(__dirname + '/html/sendMessage.js');
 });
+
+app.get('/chatDB.js', (req, res)=>{
+    res.setHeader('Content-Type','application/javascript');
+    res.sendFile(__dirname + '/html/chatDB.js');
+});
+
 
 app.post('/',(req, res)=>{
     //save the username and password in the database

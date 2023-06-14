@@ -22,6 +22,9 @@ wsServer.onmessage = (event)=>{
         messageElement.classList.add('chat-message', 'server-message');
         messageElement.textContent = parsedMessage.text;
         chatContainer.appendChild(messageElement);
+
+        //add to the messageArray
+        addToIndexedDB(username, '#'+parsedMessage.text);    //# indicates left side
     }
     
 }
@@ -30,6 +33,7 @@ wsServer.onclose = (event)=>{
     console.log("close");
 }
 
+//send message to the server
 function sendMessage(){
     var username = document.getElementById("username").innerText;
     if(username == ''){
@@ -42,6 +46,7 @@ function sendMessage(){
         messageElement.classList.add('chat-message', 'user-message');
         messageElement.textContent = messageToSend;
         chatContainer.appendChild(messageElement);
+
         u = '@'+username;
         let source = localStorage.getItem("username");
         const msg = {
@@ -51,6 +56,9 @@ function sendMessage(){
 
         }
         wsServer.send(JSON.stringify(msg));
+
+        //send it to indexedDB  
+        addToIndexedDB(username, '!'+messageToSend);    //! indicates right side
         message.value = '';
     }
     
@@ -62,20 +70,44 @@ function addToList(){
     var userList = document.querySelector('#user-list');
     var userElement = document.createElement('li');
     userElement.textContent = user;
+    userList.appendChild(userElement);
 
     // Add click event listener to the user element
     userElement.addEventListener('click', function() {
+        var heading = document.getElementById('username');
+        heading.textContent = user;
+        const chatContainer = document.getElementById('message-list');
+        chatContainer.innerHTML='';
         selectUser(user);
     });
-    userList.appendChild(userElement);
-
 }
 
 function selectUser(user){
-    var heading = document.getElementById('username');
-    heading.textContent = user;
+    //retrieve messages from messageArray and show it to the user
+    getMessageArray(user, (messageArray)=>{
+        let len = messageArray.length;
+        
+        //iterate through the message array and classify them
+        for(let i = 0; i < len; ++i){
+            let s = messageArray[i];
+            if(s[0] == '!'){        
+                s = s.slice(1);
+                const chatContainer = document.getElementById('message-list');
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('chat-message', 'user-message');
+                messageElement.textContent = s;
+                chatContainer.appendChild(messageElement);
 
-    const chatContainer = document.getElementById('message-list');
-    chatContainer.innerHTML='';
+            }else{
+                s = s.slice(1);
+                const chatContainer = document.getElementById('message-list');
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('chat-message', 'server-message');
+                messageElement.textContent = s;
+                chatContainer.appendChild(messageElement);
+            }  
+        }
+    });
+    
 }
 

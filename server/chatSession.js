@@ -1,5 +1,5 @@
 
-const websocket = require('ws');
+const websocket = require('ws');    //same as python import
 const wss = new websocket.Server({port:7000});
 
 const map = new Map();
