@@ -63,7 +63,6 @@ function getMessageArray(user, callback){
     };
 
     tx.oncomplete = () => {
-        console.log("Chat message array updated successfully.");
-        
+        console.log("Chat message array updated successfully.");  
     };
 }

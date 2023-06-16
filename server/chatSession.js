@@ -19,8 +19,8 @@ wss.on("connection", (ws,req)=>{
             user = messageFromClient.toString();
         }else{
             parsedMessage = JSON.parse(messageFromClient);
-            var {source, destination, text} = parsedMessage;
-            destinationSocket = map.get(destination);
+            var {source, destination, text} = parsedMessage;    //source: saunvid  dest: mayu  text: hi how r u?
+            destinationSocket = map.get(destination);           //mayu's ws
             //here I'll direct the message coming from shiva bhaiya to me.
             wss.clients.forEach((c)=>{
             if(c == destinationSocket && c.readyState === websocket.OPEN){
