@@ -8,8 +8,8 @@ request.onupgradeneeded = (e)=>{
 
 request.onsuccess = (e)=>{
     db = request.result;
-    tx = db.transaction("messages","readwrite");
-    store = tx.objectStore("messages");
+    // tx = db.transaction("messages","readwrite");
+    // store = tx.objectStore("messages");
 }
 
 request.onerror = (e)=>{
@@ -65,4 +65,25 @@ function getMessageArray(user, callback){
     tx.oncomplete = () => {
         console.log("Chat message array updated successfully.");  
     };
+}
+
+function getAllUsers(callback){
+    tx = db.transaction("messages", "readwrite");
+    store = tx.objectStore("messages");
+    let users = [];
+    const request = store.openCursor();
+    request.onsuccess = function(event){
+        const cursor = event.target.result;
+        if(cursor){
+            //console.log(cursor.value.user);
+            users.push(cursor.value.user);
+            cursor.continue();    
+        }else{
+            callback(users);
+        }
+    }
+
+    request.onerror = function(event){
+        console.log(event);
+    }
 }
