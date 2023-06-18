@@ -99,8 +99,7 @@ function addToList(){
     var userElement = document.createElement('li');
     userElement.textContent = user;
     userList.appendChild(userElement);
-    users.value = '';   
-    
+    users.value = '';
 
     // Add click event listener to the user element
     userElement.addEventListener('click', function() {
