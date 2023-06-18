@@ -2,6 +2,33 @@
 const url = "ws://81.111.75.45:7000";
 const wsServer = new WebSocket(url);
 
+getAllUsers((users) => {
+    var userElement;
+    console.log("inside sendMessage: " + users);
+    const len = users.length;
+    for (let i = 0; i < len; ++i) {
+        let u = users[i];
+        var userList = document.querySelector('#user-list');
+        userElement = document.createElement('li');
+        userElement.textContent = u;
+        userList.appendChild(userElement);
+
+        // Create a closure by wrapping the event listener in an immediately-invoked function expression (IIFE)
+        (function(element) {
+            element.addEventListener('click', function(event) {
+                var heading = document.getElementById('username');
+                var text = event.target.textContent;
+                console.log(text);
+                heading.textContent = text;
+                const chatContainer = document.getElementById('message-list');
+                chatContainer.innerHTML='';
+                selectUser(element.innerText);
+            });
+        })(userElement);
+    }
+});
+
+
 wsServer.onopen = (event)=>{
     //send the username to the server so that it can create a list
     let username = localStorage.getItem("username");
