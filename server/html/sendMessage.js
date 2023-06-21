@@ -4,7 +4,6 @@ const wsServer = new WebSocket(url);
 
 getAllUsers((users) => {
     var userElement;
-    console.log("inside sendMessage: " + users);
     const len = users.length;
     for (let i = 0; i < len; ++i) {
         let u = users[i];
@@ -50,8 +49,34 @@ wsServer.onmessage = (event)=>{
         messageElement.textContent = parsedMessage.text;
         chatContainer.appendChild(messageElement);
 
-        //add to the messageArray
+        //इसे संदेश सूची में जोड़े 
         addToIndexedDB(username, '#'+parsedMessage.text);    //# indicates left side
+    }else{
+        
+        //check the source of the message if the sender of this message exists in the DB
+        //then add this message to that array otherwise create a new list in the user-list
+        //and then add the data 
+        getAllUsers((users)=>{
+            var found = false;
+            const len = users.length;
+            for(let i=0; i < len; ++i){
+                var user = users[i];
+
+                //sender is present in the DB no need to create a new list
+                if(source == user){
+                    found = true;
+                    //add to the messageArray
+                    addToIndexedDB(source, '#'+parsedMessage.text);    //# indicates left side
+                    break;
+                } 
+            }
+
+            //if user is not present in the DB then add a list and to the DB
+            if(!found){
+                addList(source);
+                addToIndexedDB(source, '#'+parsedMessage.text);
+            }
+        });
     }
     
 }

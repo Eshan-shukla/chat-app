@@ -8,8 +8,6 @@ request.onupgradeneeded = (e)=>{
 
 request.onsuccess = (e)=>{
     db = request.result;
-    // tx = db.transaction("messages","readwrite");
-    // store = tx.objectStore("messages");
 }
 
 request.onerror = (e)=>{
@@ -67,6 +65,7 @@ function getMessageArray(user, callback){
     };
 }
 
+//retrieve all the users present in the indexedDB
 function getAllUsers(callback){
     tx = db.transaction("messages", "readwrite");
     store = tx.objectStore("messages");
