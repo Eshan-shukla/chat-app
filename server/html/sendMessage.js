@@ -91,15 +91,19 @@ function sendMessage(){
     
 }
 
-//add users to the list
 function addToList(){
     var users = document.getElementById('user-input-field');
     var user = users.value;
+    addList(user);
+    users.value = '';
+}
+
+//add user to the list 
+function addList(user){
     var userList = document.querySelector('#user-list');
     var userElement = document.createElement('li');
     userElement.textContent = user;
     userList.appendChild(userElement);
-    users.value = '';
 
     // Add click event listener to the user element
     userElement.addEventListener('click', function() {
