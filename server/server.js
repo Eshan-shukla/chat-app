@@ -34,7 +34,7 @@ app.get('/sendMessage.js', (req, res)=>{
 
 app.get('/chatDB.js', (req, res)=>{
     res.setHeader('Content-Type','application/javascript');
-    res.sendFile(__dirname + '/html/chatDB.js');
+    res.sendFile(__dirname + '/html/chatDB2.js');
 });
 
 
