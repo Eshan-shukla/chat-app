@@ -1,50 +1,46 @@
 const mysql = require('mysql');
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
 
 //add data into database
 module.exports.addIntoDB = (username, password)=>{
-  var con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "21719528",
-  });
+  MongoClient.connect(url, async function(err, db) {
 
-    con.connect(function(err) {
-        if (err) throw err;
+    if (err) throw err;
+  
+    var dbo = db.db("accounts");
+    var myobj = { name: username, password: password };
+    
+    dbo.collection("users").insertOne(myobj, function(err, res) {
+      if (err) throw err;
 
-        var sql = `INSERT INTO ChatApp.ACCOUNT (username, password) VALUES ('${username}', '${password}')`;
-        con.query(sql, function (err, result) {
-          if (err) throw err;
-        });
-        con.end();
-      });
+      console.log("1 document inserted");
+
+      db.close();
+    });
+  }); 
 
 };
 
 //authenticate user credentials
 module.exports.checkAuth = (username, password, callback)=>{
-  var auth = false;
-  var con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "21719528",
-  });
+  MongoClient.connect(url, async function(err, db) {
 
-  con.connect(function(err){
-    if(err) throw err;
-  });
+    if (err) throw err;
+  
+    var dbo = db.db("accounts");
+  
+    const doc = await dbo.collection("users").findOne({name:username, password:password});
 
-  var sql = "SELECT username, password FROM ChatApp.ACCOUNT";
-  con.query(sql, function(err,result,fields){
-    if(err) throw err;
-
-    var len = result.length;
-          for(var i = 0; i < len; ++i){
-            if(result[i].username == username && result[i].password == password){
-              auth = true;
-            }
-          }
-          callback(auth);
-          con.end();
-  });
+    if(doc == null){
+      callback(false);
+      console.log("false")
+    }else{
+      console.log("true")
+      callback(true);
+    }
+    
+    db.close();
+  }); 
 }
 

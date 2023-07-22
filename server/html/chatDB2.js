@@ -46,7 +46,7 @@ function addToIndexedDB(user, message) {
 }
 
 //retrieve the message array of a particular user and return it
-function getMessageArray(user, callback){
+function getMessageArray(user, callback){   //user-"aashu"
     const request = indexedDB.open("chats",1);
     let db, tx, store;
 
@@ -59,12 +59,12 @@ function getMessageArray(user, callback){
         db = request.result;
         tx = db.transaction("messages", "readwrite");
         store = tx.objectStore("messages");
-        const req = store.get(user); 
+        const req = store.get(user); "aashu"
 
         req.onsuccess = (event) => {
             let chatMessage = event.target.result;
             let m = chatMessage.message;
-            callback(m);
+            callback(m);    //return messagearray
         };
 
         req.onerror = (event) => {
