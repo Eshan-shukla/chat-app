@@ -25,22 +25,25 @@ app.get('/sucss', (req, res) => {
 
 //main chat page
 app.get('/chatPage', (req, res)=>{
-    res.sendFile(__dirname + '/html/ui.html');
+    res.sendFile(__dirname + '/html/mainPage/ui.html');
 });
 
 app.get('/sendMessage.js', (req, res)=>{
-    res.sendFile(__dirname + '/html/sendMessage.js');
+    res.sendFile(__dirname + '/html/mainPage/sendMessage.js');
 });
 
 app.get('/chatDB2.js', (req, res)=>{
     res.setHeader('Content-Type','application/javascript');
-    res.sendFile(__dirname + '/html/chatDB2.js');
+    res.sendFile(__dirname + '/html/mainPage/chatDB2.js');
 });
 
 
 app.post('/',(req, res)=>{
     //save the username and password in the database
     db.addIntoDB(req.body.username, req.body.password1);
+
+    //create a collection in messages database to store that account's messages
+    
     res.redirect('/');
 });
 

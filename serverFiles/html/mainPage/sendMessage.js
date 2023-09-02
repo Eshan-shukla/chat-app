@@ -21,7 +21,7 @@ getAllUsers((users) => {
                 heading.textContent = text;
                 const chatContainer = document.getElementById('message-list');
                 chatContainer.innerHTML='';
-                selectUser(element.innerText);
+                selectUser(element.innerText); //restores old messages 
             });
         })(userElement);
     }
@@ -49,7 +49,7 @@ wsServer.onmessage = (event)=>{
         messageElement.textContent = parsedMessage.text;
         chatContainer.appendChild(messageElement);
 
-        //इसे संदेश सूची में जोड़े 
+        
         addToIndexedDB(username, '#'+parsedMessage.text);    //# indicates left side
     }else{
         
@@ -88,7 +88,7 @@ wsServer.onclose = (event)=>{
 //send message to the server
 function sendMessage(){
     var username = document.getElementById("username").innerText;
-    if(username == ''){
+    if(username == 'username'){
         alert("Enter the username");
     }else{
         var message = document.getElementById('message-input');
@@ -140,8 +140,9 @@ function addList(user){
     });
 }
 
-function selectUser(user){
+function selectUser(user){  //user-"aashu"
     //retrieve messages from messageArray and show it to the user
+    //get messages of "aashu","sauncvid1"
     getMessageArray(user, (messageArray)=>{
         let len = messageArray.length;
         
@@ -149,7 +150,7 @@ function selectUser(user){
         for(let i = 0; i < len; ++i){
             let s = messageArray[i];
             if(s[0] == '!'){        
-                s = s.slice(1);
+                s = s.slice(1); //""
                 const chatContainer = document.getElementById('message-list');
                 const messageElement = document.createElement('div');
                 messageElement.classList.add('chat-message', 'user-message');
