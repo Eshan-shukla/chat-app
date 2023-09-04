@@ -1,5 +1,6 @@
 
 const websocket = require('ws');    //same as python import
+const { addMessageIntoDB } = require('./DBOp');
 const wss = new websocket.Server({port:7000});
 
 const map = new Map();
@@ -19,8 +20,10 @@ wss.on("connection", (ws,req)=>{
             user = messageFromClient.toString();
         }else{
             parsedMessage = JSON.parse(messageFromClient);
+            
             var {source, destination, text} = parsedMessage;    //source: saunvid  dest: mayu  text: hi how r u?
-            destinationSocket = map.get(destination);           //mayu's ws
+            console.log(source + destination);
+            destinationSocket = map.get('@'+destination);           //mayu's ws
             //here I'll direct the message coming from shiva bhaiya to me.
             wss.clients.forEach((c)=>{
             if(c == destinationSocket && c.readyState === websocket.OPEN){
@@ -32,8 +35,11 @@ wss.on("connection", (ws,req)=>{
                 }
                 c.send(JSON.stringify(msg));
             }       
-        }); 
-        }       
+            }); 
+            //store the message in the mongoDB database    
+            addMessageIntoDB(source, destination, text); 
+        }
+          
     });
 
     ws.on("close", ()=>{

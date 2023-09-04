@@ -8,33 +8,33 @@ const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.get('/', (req, res)=>{
-    res.sendFile(__dirname + '/html/loginPage/sign-in.html');
+    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/loginPage/sign-in.html');
 });
 
 app.get('/css', (req, res) => {
-    res.sendFile(__dirname + '/html/loginPage/sign-inPage.css');
+    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/loginPage/sign-inPage.css');
 });
 
 app.get('/signup', (req,res)=>{
-    res.sendFile(__dirname + '/html/signupPage/sign-up.html');
+    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/signupPage/sign-up.html');
 });
 
 app.get('/sucss', (req, res) => {
-    res.sendFile(__dirname + '/html/signupPage/sign-up.css');
+    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/signupPage/sign-up.css');
 });
 
 //main chat page
 app.get('/chatPage', (req, res)=>{
-    res.sendFile(__dirname + '/html/mainPage/ui.html');
+    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/mainPage/ui.html');
 });
 
 app.get('/sendMessage.js', (req, res)=>{
-    res.sendFile(__dirname + '/html/mainPage/sendMessage.js');
+    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/mainPage/sendMessage.js');
 });
 
 app.get('/chatDB2.js', (req, res)=>{
     res.setHeader('Content-Type','application/javascript');
-    res.sendFile(__dirname + '/html/mainPage/chatDB2.js');
+    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/mainPage/chatDB2.js');
 });
 
 

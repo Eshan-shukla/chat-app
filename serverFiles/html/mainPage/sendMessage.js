@@ -1,31 +1,31 @@
 //open connection
-const url = "ws://81.111.75.45:7000";
+const url = "ws://192.168.1.21:7000";
 const wsServer = new WebSocket(url);
 
-getAllUsers((users) => {
-    var userElement;
-    const len = users.length;
-    for (let i = 0; i < len; ++i) {
-        let u = users[i];
-        var userList = document.querySelector('#user-list');
-        userElement = document.createElement('li');
-        userElement.textContent = u;
-        userList.appendChild(userElement);
+// getAllUsers((users) => {
+//     var userElement;
+//     const len = users.length;
+//     for (let i = 0; i < len; ++i) {
+//         let u = users[i];
+//         var userList = document.querySelector('#user-list');
+//         userElement = document.createElement('li');
+//         userElement.textContent = u;
+//         userList.appendChild(userElement);
 
-        // Create a closure by wrapping the event listener in an immediately-invoked function expression (IIFE)
-        (function(element) {
-            element.addEventListener('click', function(event) {
-                var heading = document.getElementById('username');
-                var text = event.target.textContent;
-                console.log(text);
-                heading.textContent = text;
-                const chatContainer = document.getElementById('message-list');
-                chatContainer.innerHTML='';
-                selectUser(element.innerText); //restores old messages 
-            });
-        })(userElement);
-    }
-});
+//         // Create a closure by wrapping the event listener in an immediately-invoked function expression (IIFE)
+//         (function(element) {
+//             element.addEventListener('click', function(event) {
+//                 var heading = document.getElementById('username');
+//                 var text = event.target.textContent;
+//                 console.log(text);
+//                 heading.textContent = text;
+//                 const chatContainer = document.getElementById('message-list');
+//                 chatContainer.innerHTML='';
+//                 selectUser(element.innerText); //restores old messages 
+//             });
+//         })(userElement);
+//     }
+// });
 
 
 wsServer.onopen = (event)=>{
@@ -49,34 +49,32 @@ wsServer.onmessage = (event)=>{
         messageElement.textContent = parsedMessage.text;
         chatContainer.appendChild(messageElement);
 
-        
-        addToIndexedDB(username, '#'+parsedMessage.text);    //# indicates left side
     }else{
         
         //check the source of the message if the sender of this message exists in the DB
         //then add this message to that array otherwise create a new list in the user-list
         //and then add the data 
-        getAllUsers((users)=>{
-            var found = false;
-            const len = users.length;
-            for(let i=0; i < len; ++i){
-                var user = users[i];
+    //     getAllUsers((users)=>{
+    //         var found = false;
+    //         const len = users.length;
+    //         for(let i=0; i < len; ++i){
+    //             var user = users[i];
 
-                //sender is present in the DB no need to create a new list
-                if(source == user){
-                    found = true;
-                    //add to the messageArray
-                    addToIndexedDB(source, '#'+parsedMessage.text);    //# indicates left side
-                    break;
-                } 
-            }
+    //             //sender is present in the DB no need to create a new list
+    //             if(source == user){
+    //                 found = true;
+    //                 //add to the messageArray
+    //                 addToIndexedDB(source, '#'+parsedMessage.text);    //# indicates left side
+    //                 break;
+    //             } 
+    //         }
 
-            //if user is not present in the DB then add a list and to the DB
-            if(!found){
-                addList(source);
-                addToIndexedDB(source, '#'+parsedMessage.text);
-            }
-        });
+    //         //if user is not present in the DB then add a list and to the DB
+    //         if(!found){
+    //             addList(source);
+    //             addToIndexedDB(source, '#'+parsedMessage.text);
+    //         }
+    //     });
     }
     
 }
@@ -99,8 +97,9 @@ function sendMessage(){
         messageElement.textContent = messageToSend;
         chatContainer.appendChild(messageElement);
 
-        u = '@'+username;
+        u = username;
         let source = localStorage.getItem("username");
+        console.log(source + u);
         const msg = {
             source: source, 
             destination : u,
@@ -108,9 +107,6 @@ function sendMessage(){
 
         }
         wsServer.send(JSON.stringify(msg));
-
-        //send it to indexedDB  
-        addToIndexedDB(username, '!'+messageToSend);    //! indicates right side
         message.value = '';
     }
     
@@ -136,37 +132,37 @@ function addList(user){
         heading.textContent = user;
         const chatContainer = document.getElementById('message-list');
         chatContainer.innerHTML='';
-        selectUser(user);
+        //selectUser(user);
     });
 }
 
-function selectUser(user){  //user-"aashu"
-    //retrieve messages from messageArray and show it to the user
-    //get messages of "aashu","sauncvid1"
-    getMessageArray(user, (messageArray)=>{
-        let len = messageArray.length;
+// function selectUser(user){  //user-"aashu"
+//     //retrieve messages from messageArray and show it to the user
+//     //get messages of "aashu","sauncvid1"
+//     getMessageArray(user, (messageArray)=>{
+//         let len = messageArray.length;
         
-        //iterate through the message array and classify them
-        for(let i = 0; i < len; ++i){
-            let s = messageArray[i];
-            if(s[0] == '!'){        
-                s = s.slice(1); //""
-                const chatContainer = document.getElementById('message-list');
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('chat-message', 'user-message');
-                messageElement.textContent = s;
-                chatContainer.appendChild(messageElement);
+//         //iterate through the message array and classify them
+//         for(let i = 0; i < len; ++i){
+//             let s = messageArray[i];
+//             if(s[0] == '!'){        
+//                 s = s.slice(1); //""
+//                 const chatContainer = document.getElementById('message-list');
+//                 const messageElement = document.createElement('div');
+//                 messageElement.classList.add('chat-message', 'user-message');
+//                 messageElement.textContent = s;
+//                 chatContainer.appendChild(messageElement);
 
-            }else{
-                s = s.slice(1);
-                const chatContainer = document.getElementById('message-list');
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('chat-message', 'server-message');
-                messageElement.textContent = s;
-                chatContainer.appendChild(messageElement);
-            }  
-        }
-    });
+//             }else{
+//                 s = s.slice(1);
+//                 const chatContainer = document.getElementById('message-list');
+//                 const messageElement = document.createElement('div');
+//                 messageElement.classList.add('chat-message', 'server-message');
+//                 messageElement.textContent = s;
+//                 chatContainer.appendChild(messageElement);
+//             }  
+//         }
+//     });
     
-}
+// }
 
