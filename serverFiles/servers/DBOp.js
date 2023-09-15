@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+//const mysql = require('mysql');
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
@@ -22,26 +22,97 @@ module.exports.addIntoDB = (username, password)=>{
 
 };
 
-//authenticate user credentials
-module.exports.checkAuth = (username, password, callback)=>{
-  MongoClient.connect(url, async function(err, db) {
+// Function to check user authentication
+module.exports.checkAuth = async (username, password) => {
+  try {
+    // Initialize the client (connect to the database)
+    const client = new MongoClient(url);
+    //await initializeClient();
 
-    if (err) throw err;
-  
-    var dbo = db.db("accounts");
-  
-    const doc = await dbo.collection("users").findOne({name:username, password:password});
+    await client.connect();
 
-    if(doc == null){
-      callback(false);
-      console.log("false")
-    }else{
-      console.log("true")
-      callback(true);
+    // Get a reference to the database and collection
+    const db = client.db('accounts');
+    const usersCollection = db.collection('users');
+
+    // Query the database to find the user
+    const doc = await usersCollection.findOne({ name: username, password: password });
+
+    // Close the database connection
+    await client.close();
+
+    // Check if a user was found
+    if (doc) {
+      console.log('Authentication successful');
+      return true;
+    } else {
+      console.log('Authentication failed');
+      return false;
+    }
+  } catch (err) {
+    console.error('Error in checkAuth:', err);
+    throw err; // Rethrow the error to indicate an issue with the authentication process
+  }
+};
+
+
+module.exports.getAllUsers = async(username)=> {
+  const client = new MongoClient(url);
+  usersList = [];
+  try {
+    await client.connect();
+
+    const db = client.db("messages");
+    const collection = db.collection(username);
+
+    // Find all documents in the collection and add them to an array
+    const cursor = collection.find({});
+
+    // Iterate over the documents using a loop
+    while (await cursor.hasNext()) {
+      const document = await cursor.next();
+      usersList.push(document.with);
+      //console.log(document);
+    }
+
+    return usersList;
+  }catch (err) {
+    console.error('Error in checkAuth:', err);
+    throw err; // Rethrow the error to indicate an issue with the authentication process
+  } 
+  finally {
+    client.close();
+  }
+}
+
+module.exports.getAllMessages = async(accountName, chatWith) =>{
+  const client = new MongoClient(url);
+
+  messageList = [];
+  try {
+    await client.connect();
+
+    const db = client.db("messages");
+    const collection = db.collection(accountName);
+
+    // Find all documents in the collection and add them to an array
+    const doc = await collection.findOne({with : chatWith});
+    
+    if (doc) {
+      messageList = await doc.messages;
+      return messageList;
+    } else {
+      console.log('User not found');
     }
     
-    db.close();
-  }); 
+
+  }catch (err) {
+    console.error('Error in checkAuth:', err);
+    throw err; // Rethrow the error to indicate an issue with the authentication process
+  } 
+  finally {
+    client.close();
+  }
 }
 
 module.exports.addMessageIntoDB = async (sender, receiver, message) => {
@@ -96,49 +167,3 @@ module.exports.addMessageIntoDB = async (sender, receiver, message) => {
 };
 
 
-
-//add text message into database
-// module.exports.addMessageIntoDB = (sender, receiver, message)=>{
-//   MongoClient.connect(url, async function(err, db) {
-
-//     if (err) throw err;
-  
-//     var dbo = db.db("messages");
-
-//     const doc = await dbo.collection(sender).findOne({with:receiver});
-//     if(doc==null){
-//       //insert for the first time into the DB
-//       const text = '!'+message;
-//       const obj = {with: receiver, messages:[text]};
-//       dbo.collection(sender).insertOne(obj, function(err,res){
-//         if (err) throw err;
-        
-//         console.log("message eneterd");
-//         //db.close();
-//       });
-//     }else{
-//       const text = '!'+message;
-//       doc.messages.push(text);
-//     }
-
-//     //same should be done with receiver
-//     const doc2 = await dbo.collection(receiver).findOne({with:sender});
-//     if(doc2==null){
-//       //insert for the first time into the DB
-//       const text = '#'+message;
-//       const obj = {with: sender, messages:[text]};
-//       dbo.collection(receiver).insertOne(obj, function(err,res){
-//         if (err) throw err;
-        
-//         console.log("message eneterd");
-//         //db.close();
-//       });
-//     }else{
-//       const text = '#'+message;
-//       doc2.messages.push(text);
-//     }
-    
-//     db.close();
-//   }); 
-
-// };

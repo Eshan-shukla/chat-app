@@ -1,9 +1,11 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const cors = require('cors');
 const db = require('./DBOp.js');
 
 const PORT = 8080;
 const app = express();
+app.use(cors());
 
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -37,6 +39,26 @@ app.get('/chatDB2.js', (req, res)=>{
     res.sendFile('/home/eshan/chatApp/project/serverFiles/html/mainPage/chatDB2.js');
 });
 
+app.get('/users', (req, res)=>{
+    db.getAllUsers(req.query.user)
+    .then(usersList =>{
+        res.send(usersList);
+        console.log(usersList);
+    })
+    .catch(err =>{
+        console.log(err);
+    })
+});
+
+app.get('/messages', (req, res)=>{
+    db.getAllMessages(req.query.accountName, req.query.chatWith)
+    .then(messageList =>{
+        res.send(messageList);
+    })
+    .catch(err =>{
+        console.log(err);
+    })
+});
 
 app.post('/',(req, res)=>{
     //save the username and password in the database
@@ -49,14 +71,28 @@ app.post('/',(req, res)=>{
 
 app.post('/checkLogIn', (req,res)=>{
 
-    db.checkAuth(req.body.username, req.body.password1, (auth)=> {
+    db.checkAuth(req.body.username, req.body.password1)
+    .then(auth =>{
+        console.log(auth);
         if(auth == true){
             //add the username and the IP address of the username to db
             res.redirect('/chatPage');
         }else{
             res.redirect('/');
         }
-    });
+    })
+    .catch(err=>{
+        console.log(err);
+    })
+
+    // db.checkAuth(req.body.username, req.body.password1, (auth)=> {
+    //     if(auth == true){
+    //         //add the username and the IP address of the username to db
+    //         res.redirect('/chatPage');
+    //     }else{
+    //         res.redirect('/');
+    //     }
+    // });
 });
 
 app.listen(PORT, ()=>{
