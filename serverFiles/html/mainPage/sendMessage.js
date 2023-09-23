@@ -132,8 +132,48 @@ function sendMessage(){
 function addToList(){
     var users = document.getElementById('user-input-field');
     var user = users.value;
-    addList(user);
-    users.value = '';
+
+    const url = 'http://192.168.1.21:8080/check?username='+user;
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        //return response.text(); // or .json() if the response is JSON
+        return response.json(); // Parse the response as JSON
+      })
+      .then((found) => {
+        if(found){
+            var userList = document.querySelector('#user-list');
+            const liElements = userList.querySelectorAll('li');
+
+            var foundInList = false;
+
+            // Iterate through the NodeList of <li> elements 
+            liElements.forEach((li) => {
+              // Access each <li> element
+              console.log(`${li.textContent}`);
+              if(li.textContent == user){
+                alert("User already present in the list.");
+                users.value = '';
+                foundInList = true;
+              }
+            });
+            if(!foundInList){
+              addList(user);
+              users.value = '';
+            }
+            
+        }else{
+            alert("Username does not exist");
+            users.value = '';
+        }
+      })
+      .catch((error) => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+    
+    
 }
 
 //add user to the list 

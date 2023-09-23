@@ -11,39 +11,85 @@
     <div class="content">
         <h2 class="logo1">Create New Account</h2>
       <div class="flex-div">
-        <!-- <h2>Sign-up</h2> -->
-        
-        <!-- <div class="name-content">
-          
-          <h2 class="logo">SIGN-UP</h2> -->
-          <!-- <p>Connect with friends and the world around you on FlexChat.</p> -->
-        <!-- </div>  -->
-        
-          <form onsubmit="return validateForm()" action="/" method="post">
+          <div class="form">
             
             <input type="text" placeholder="Username" id="username" name="username" required />
             <input type="password" id="password1" name="password1" placeholder="Password" required/>
             <input type="password" id="password2" name="password2" placeholder="Confirm Password" required>
-            <button type="submit" class="login" onclick="validateForm()">Sign Up</button>
-            <!-- <a href="#">Forgot Password ?</a> -->
-            <!-- <hr> -->
-            <!-- <button class="create-account">Create New Account</button> -->
-          </form>
+            <button class="login" onclick="validateForm()">Sign Up</button>
+          </div>
           <script>
-            function validateForm(){
-                    var username = document.getElementById("username");
-                    var un = username.value;
-              var password1 = document.getElementById("password1");
-              var ps1 = password1.value;
-              var password2 = document.getElementById("password2");
-              var ps2 = password2.value;
-        
-              if(ps1 != ps2){
-                alert("Passwords do not match");
+
+            async function checkUserExists(un) {
+              try {
+                // Define the URL where the server endpoint for username check is located
+                const url = 'http://192.168.1.21:8080/check?username='+un;
+
+                // Send an HTTP GET request to the server
+                const response = await fetch(url);
+
+                // Check if the response is OK (status code 200)
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+
+                // Parse the response as JSON (assuming the server returns JSON)
+                const data = await response.json();
+                return data;
+              } catch (error) {
+                console.error('Error while checking username:', error);
                 return false;
+              }
+            }
+
+
+            async function validateForm(){
+              var username = document.getElementById("username");
+              var un = username.value;
+
+              const found = await checkUserExists(un);
+              console.log(found);
+              if(found){
+                alert("Username already exists! Choose another username");
+                //return false;
               }else{
-        
-                        return true;
+                var password1 = document.getElementById("password1");
+                var ps1 = password1.value;
+                var password2 = document.getElementById("password2");
+                var ps2 = password2.value;
+          
+                if(ps1 != ps2){
+                  alert("Passwords do not match");
+                }else{
+                  // Replace the following code with your actual POST request logic
+                  const postData = {
+                    username: un,
+                    password: ps1,
+                  };
+
+                  try {
+                    const postResponse = await fetch('http://192.168.1.21:8080/', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(postData),
+                    });
+
+                    if (!postResponse.ok) {
+                      throw new Error('Failed to send POST request');
+                    }
+
+                    // Handle success
+                    console.log('POST request was successful');
+                    // Redirect the client to the root path '/'
+                    window.location.href = '/';
+                    
+                  } catch (error) {
+                    console.error('Failed to send POST request:', error);
+                    
+                  }
+                }
               }
             }
           </script>

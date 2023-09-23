@@ -3,23 +3,27 @@ var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
 //add data into database
-module.exports.addIntoDB = (username, password)=>{
-  MongoClient.connect(url, async function(err, db) {
-
-    if (err) throw err;
-  
-    var dbo = db.db("accounts");
-    var myobj = { name: username, password: password };
+module.exports.addIntoDB = async (username, password)=>{
+  const client = new MongoClient(url);
+  try {
     
-    dbo.collection("users").insertOne(myobj, function(err, res) {
-      if (err) throw err;
+    await client.connect();
 
-      console.log("1 document inserted");
+    // Get a reference to the database and collection
+    const db = client.db('accounts');
+    const usersCollection = db.collection('users');
 
-      db.close();
-    });
-  }); 
+    const myobj = { name: username, password: password };
 
+    await usersCollection.insertOne(myobj);
+
+  } catch (err) {
+    console.error("Error:", err);
+  } finally {
+    if (client) {
+      client.close();
+    }
+  }
 };
 
 // Function to check user authentication
@@ -55,6 +59,32 @@ module.exports.checkAuth = async (username, password) => {
   }
 };
 
+module.exports.checkUserExists = async (username)=>{
+  const client = new MongoClient(url);
+  console.log(username);
+  try {
+    await client.connect();
+
+    const db =  client.db("accounts");
+    const collection =  db.collection("users");
+
+    const doc = await collection.findOne({name : username});
+    console.log(doc);
+
+    if(doc==null){
+      return "false";
+    }else{
+      return "true";
+    }
+
+  }catch (err) {
+    console.error('Error in checkAuth:', err);
+    throw err; // Rethrow the error to indicate an issue with the authentication process
+  } 
+  finally {
+    client.close();
+  }
+}
 
 module.exports.getAllUsers = async(username)=> {
   const client = new MongoClient(url);

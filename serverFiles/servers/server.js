@@ -7,6 +7,8 @@ const PORT = 8080;
 const app = express();
 app.use(cors());
 
+// Middleware to parse JSON data in the request body
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.get('/', (req, res)=>{
@@ -43,9 +45,18 @@ app.get('/users', (req, res)=>{
     db.getAllUsers(req.query.user)
     .then(usersList =>{
         res.send(usersList);
-        console.log(usersList);
     })
     .catch(err =>{
+        console.log(err);
+    })
+});
+
+app.get('/check', (req,res)=>{
+    db.checkUserExists(req.query.username)
+    .then(found =>{
+        res.send(found);
+    })
+    .catch(err=>{
         console.log(err);
     })
 });
@@ -61,11 +72,9 @@ app.get('/messages', (req, res)=>{
 });
 
 app.post('/',(req, res)=>{
-    //save the username and password in the database
-    db.addIntoDB(req.body.username, req.body.password1);
+    //save the username and password in the 
+    db.addIntoDB(req.body.username, req.body.password);
 
-    //create a collection in messages database to store that account's messages
-    
     res.redirect('/');
 });
 
@@ -85,14 +94,6 @@ app.post('/checkLogIn', (req,res)=>{
         console.log(err);
     })
 
-    // db.checkAuth(req.body.username, req.body.password1, (auth)=> {
-    //     if(auth == true){
-    //         //add the username and the IP address of the username to db
-    //         res.redirect('/chatPage');
-    //     }else{
-    //         res.redirect('/');
-    //     }
-    // });
 });
 
 app.listen(PORT, ()=>{
