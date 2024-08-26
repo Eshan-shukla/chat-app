@@ -2,8 +2,9 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
 const db = require('./DBOp.js');
+const path = require('path');
 
-const PORT = 8080;
+const PORT = 5000;
 const app = express();
 app.use(cors());
 
@@ -11,34 +12,43 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
+const p = path.dirname('/home/eshan/chat-app/serverFiles/html/')
+
 app.get('/', (req, res)=>{
-    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/loginPage/sign-in.html');
+    res.sendFile(path.join(p, '/html/loginPage/sign-in.html'));
+    //res.sendFile('/home/eshan/chatApp/project/serverFiles/html/loginPage/sign-in.html');
 });
 
 app.get('/css', (req, res) => {
-    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/loginPage/sign-inPage.css');
+    res.sendFile(path.join(p, '/html/loginPage/sign-inPage.css'));
+    //res.sendFile('/home/eshan/chatApp/project/serverFiles/html/loginPage/sign-inPage.css');
 });
 
 app.get('/signup', (req,res)=>{
-    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/signupPage/sign-up.html');
+    res.sendFile(path.join(p, '/html/signupPage/sign-up.html'));
+    //res.sendFile('/home/eshan/chatApp/project/serverFiles/html/');
 });
 
 app.get('/sucss', (req, res) => {
-    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/signupPage/sign-up.css');
+    res.sendFile(path.join(p, '/html/signupPage/sign-up.css'));
+    //res.sendFile('/home/eshan/chatApp/project/serverFiles/html/signupPage/sign-up.css');
 });
 
 //main chat page
 app.get('/chatPage', (req, res)=>{
-    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/mainPage/ui.html');
+    res.sendFile(path.join(p, '/html/mainPage/ui.html'));
+    //res.sendFile('/home/eshan/chatApp/project/serverFiles/html/mainPage/ui.html');
 });
 
 app.get('/sendMessage.js', (req, res)=>{
-    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/mainPage/sendMessage.js');
+    res.sendFile(path.join(p, '/html/mainPage/sendMessage.js'));
+    //res.sendFile('/home/eshan/chatApp/project/serverFiles/html/mainPage/sendMessage.js');
 });
 
 app.get('/chatDB2.js', (req, res)=>{
     res.setHeader('Content-Type','application/javascript');
-    res.sendFile('/home/eshan/chatApp/project/serverFiles/html/mainPage/chatDB2.js');
+    res.sendFile(path.join(p, '/html/mainPage/sendMessage.js'));
+    //res.sendFile('/home/eshan/chatApp/project/serverFiles/html/mainPage/chatDB2.js');
 });
 
 app.get('/users', (req, res)=>{
@@ -71,8 +81,10 @@ app.get('/messages', (req, res)=>{
     })
 });
 
+
+ //save the username and password in the mongodb database
 app.post('/',(req, res)=>{
-    //save the username and password in the 
+
     db.addIntoDB(req.body.username, req.body.password);
 
     res.redirect('/');
