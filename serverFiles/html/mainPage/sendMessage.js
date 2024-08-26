@@ -17,7 +17,6 @@ fetch(url)
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    //return response.text(); // or .json() if the response is JSON
     return response.json(); // Parse the response as JSON
   })
   .then((users) => {
@@ -80,43 +79,15 @@ wsServer.onmessage = (event)=>{
 
             // Iterate through the NodeList of <li> elements 
             liElements.forEach((li) => {
-              // Access each <li> element
-              //console.log(`${li.textContent}`);
+
               if(li.textContent == source){
-                //alert("User already present in the list.");
-                //users.value = '';
                 foundInList = true;
               }
             });
             if(!foundInList){
               addList(source);
-             // users.value = '';
             }
 
-        //check the source of the message if the sender of this message exists in the DB
-        //then add this message to that array otherwise create a new list in the user-list
-        //and then add the data 
-    //     getAllUsers((users)=>{
-    //         var found = false;
-    //         const len = users.length;
-    //         for(let i=0; i < len; ++i){
-    //             var user = users[i];
-
-    //             //sender is present in the DB no need to create a new list
-    //             if(source == user){
-    //                 found = true;
-    //                 //add to the messageArray
-    //                 addToIndexedDB(source, '#'+parsedMessage.text);    //# indicates left side
-    //                 break;
-    //             } 
-    //         }
-
-    //         //if user is not present in the DB then add a list and to the DB
-    //         if(!found){
-    //             addList(source);
-    //             addToIndexedDB(source, '#'+parsedMessage.text);
-    //         }
-    //     });
     }
     
 }
@@ -128,8 +99,8 @@ wsServer.onclose = (event)=>{
 //send message to the server
 function sendMessage(){
     var username = document.getElementById("username").innerText;
-    if(username == 'username'){
-        alert("Enter the username");
+    if(username == ''){
+        alert("Select a username or search a username");
     }else{
         var message = document.getElementById('message-input');
         var messageToSend = message.value;
@@ -228,6 +199,9 @@ function addList(user){
         selectUser(user);
     });
 }
+
+
+
 
 function selectUser(user){  //user-"aashu"
     //Get all the previous messages from the server 
