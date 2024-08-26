@@ -1,6 +1,7 @@
 //open connection
-const url = "ws://192.168.1.21:7000";
-const wsServer = new WebSocket(url);
+const urll = "ws://192.168.1.9:8000";
+const httpUrl = "http://192.168.1.9:5000";
+const wsServer = new WebSocket(urll);
 
 
 wsServer.onopen = (event)=>{
@@ -9,7 +10,7 @@ wsServer.onopen = (event)=>{
     u = '@'+ username;
     wsServer.send(u);
 
-    const url = 'http://192.168.1.21:8080/users?user='+username; // Replace with the URL you want to fetch
+    const url = httpUrl +  '/users?user='+username; // Replace with the URL you want to fetch
 
 fetch(url)
   .then((response) => {
@@ -39,8 +40,11 @@ fetch(url)
                 var text = event.target.textContent;
                 console.log(text);
                 heading.textContent = text;
+                // Create a horizontal line element
+                const horizontalLine = document.createElement('hr');
                 const chatContainer = document.getElementById('message-list');
                 chatContainer.innerHTML='';
+                chatContainer.appendChild(horizontalLine);
                 selectUser(element.innerText); //restores old messages 
             });
         })(userElement);
@@ -67,7 +71,28 @@ wsServer.onmessage = (event)=>{
         chatContainer.appendChild(messageElement);
 
     }else{
-        
+      console.log("inside else");
+        //now once user clicks on the on the li tag retrieve all the messages and display here
+        var userList = document.querySelector('#user-list');
+            const liElements = userList.querySelectorAll('li');
+
+            var foundInList = false;
+
+            // Iterate through the NodeList of <li> elements 
+            liElements.forEach((li) => {
+              // Access each <li> element
+              //console.log(`${li.textContent}`);
+              if(li.textContent == source){
+                //alert("User already present in the list.");
+                //users.value = '';
+                foundInList = true;
+              }
+            });
+            if(!foundInList){
+              addList(source);
+             // users.value = '';
+            }
+
         //check the source of the message if the sender of this message exists in the DB
         //then add this message to that array otherwise create a new list in the user-list
         //and then add the data 
@@ -133,7 +158,13 @@ function addToList(){
     var users = document.getElementById('user-input-field');
     var user = users.value;
 
-    const url = 'http://192.168.1.21:8080/check?username='+user;
+    //if user is same as the account username alert about it
+    const n = localStorage.getItem("username");
+    if(n == user){
+      alert("This is same as your account name");
+    }
+    else{
+    const url = httpUrl + '/check?username='+user;
     fetch(url)
       .then((response) => {
         if (!response.ok) {
@@ -172,7 +203,7 @@ function addToList(){
       .catch((error) => {
         console.error('There was a problem with the fetch operation:', error);
       });
-    
+    }
     
 }
 
@@ -185,18 +216,23 @@ function addList(user){
 
     // Add click event listener to the user element
     userElement.addEventListener('click', function() {
-        var heading = document.getElementById('username');
+        var heading = document.getElementById('username');  
         heading.textContent = user;
+
+        // Create a horizontal line element
+        const horizontalLine = document.createElement('hr');
+
         const chatContainer = document.getElementById('message-list');
         chatContainer.innerHTML='';
-        //selectUser(user);
+        chatContainer.appendChild(horizontalLine);  
+        selectUser(user);
     });
 }
 
 function selectUser(user){  //user-"aashu"
     //Get all the previous messages from the server 
     let accountName = localStorage.getItem("username");
-    const url = 'http://192.168.1.21:8080/messages?accountName='+accountName+'&chatWith='+user;
+    const url =  httpUrl + '/messages?accountName='+accountName+'&chatWith='+user;
 
 fetch(url)
   .then((response) => {
