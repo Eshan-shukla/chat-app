@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>FlexChat</title>
@@ -14,22 +15,46 @@
           <h1 class="logo">FlexChat</h1>
           <p>Connect with friends and the world around you on FlexChat.</p>
         </div>
-          <form action="/checkLogIn" method="post">
+          <!-- <form id="loginForm"> -->
+            <div id="form">
             <input type="text" id="username" placeholder="Username" name="username" required />
-            <input type="password" placeholder="Password" name="password1" required>
-            <button onclick="clearInput()" type="submit" class="login" id="button">Log In</button>
+            <input type="password" id="password" placeholder="Password" name="password" required>
+            <button onclick="getMainPage()"  class="login" id="button">Log In</button>
             <!-- <a href="#">Forgot Password ?</a> -->
             <hr>
             <a href="/signup">
               <button type="button" class="create-account">Create New Account</button>
             </a>
-          </form>
+          </div>
+          <!-- </form> -->
           <script>
 		
-            function clearInput(){
-              let username = document.getElementById("username").value;
+            function getMainPage(){
+              const username = document.getElementById("username").value;
+              const password = document.getElementById("password").value;
+
               localStorage.setItem("username", username);
-              document.getElementById("button").value = "";
+
+              //document.getElementById("button").value = "";
+
+              const url = `http://192.168.1.9:5000/checkCredentials?username=${username}&password=${password}`;
+
+              fetch(url)
+                .then((response) => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                  }
+                  return response.text();
+                })
+                .then( html => {
+                
+                document.open(); // Clear the current document
+                document.write(html); // Write the new HTML content
+                document.close(); // Close the document for rendering
+                })
+                .catch(error => {
+                  console.log(error);
+                });
             }
           </script>
       </div>

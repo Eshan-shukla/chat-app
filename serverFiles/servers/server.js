@@ -34,11 +34,20 @@ app.get('/sucss', (req, res) => {
     //res.sendFile('/home/eshan/chatApp/project/serverFiles/html/signupPage/sign-up.css');
 });
 
-//main chat page
-app.get('/chatPage', (req, res)=>{
-    res.sendFile(path.join(p, '/html/mainPage/ui.html'));
-    //res.sendFile('/home/eshan/chatApp/project/serverFiles/html/mainPage/ui.html');
+app.get('/checkCredentials', (req, res)=>{
+
+    db.checkAuth(req.query.username, req.query.password)
+    .then(auth =>{
+        if(auth == true){
+            //add the username and the IP address of the username to db
+            res.sendFile(path.join(p, '/html/mainPage/ui.html'));
+        }
+    })
+    .catch(err=>{
+        console.log(err);
+    })
 });
+
 
 app.get('/sendMessage.js', (req, res)=>{
     res.sendFile(path.join(p, '/html/mainPage/sendMessage.js'));
@@ -88,24 +97,6 @@ app.post('/',(req, res)=>{
     db.addIntoDB(req.body.username, req.body.password);
 
     res.redirect('/');
-});
-
-app.post('/checkLogIn', (req,res)=>{
-
-    db.checkAuth(req.body.username, req.body.password1)
-    .then(auth =>{
-        console.log(auth);
-        if(auth == true){
-            //add the username and the IP address of the username to db
-            res.redirect('/chatPage');
-        }else{
-            res.redirect('/');
-        }
-    })
-    .catch(err=>{
-        console.log(err);
-    })
-
 });
 
 app.listen(PORT, ()=>{

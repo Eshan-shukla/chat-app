@@ -22,7 +22,6 @@ fetch(url)
   .then((users) => {
     //get all the users from the server that this account has interacted with. 
     //and display them on the lefthand side of the screen below the search tab
-    console.log(users);
     var userElement;
     const len = users.length;
     for (let i = 0; i < len; ++i) {
@@ -37,7 +36,7 @@ fetch(url)
             element.addEventListener('click', function(event) {
                 var heading = document.getElementById('username');
                 var text = event.target.textContent;
-                console.log(text);
+          
                 heading.textContent = text;
                 // Create a horizontal line element
                 const horizontalLine = document.createElement('hr');
@@ -61,7 +60,7 @@ wsServer.onmessage = (event)=>{
     //event is of json type
     parsedMessage = JSON.parse(event.data);
     var source = parsedMessage.source;
-    console.log(source);
+
     if(source == username){
         const chatContainer = document.getElementById('message-list');
         const messageElement = document.createElement('div');
@@ -112,7 +111,6 @@ function sendMessage(){
 
         u = username;
         let source = localStorage.getItem("username");
-        console.log(source + u);
         const msg = {
             source: source, 
             destination : u,
