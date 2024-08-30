@@ -34,19 +34,42 @@ app.get('/sucss', (req, res) => {
     //res.sendFile('/home/eshan/chatApp/project/serverFiles/html/signupPage/sign-up.css');
 });
 
-app.get('/checkCredentials', (req, res)=>{
+app.post('/checkCredentials', async (req, res) =>{
+    const username = req.body.username;
+    const password = req.body.password;
 
-    db.checkAuth(req.query.username, req.query.password)
-    .then(auth =>{
-        if(auth == true){
-            //add the username and the IP address of the username to db
-            res.sendFile(path.join(p, '/html/mainPage/ui.html'));
+    try{
+        const auth = await db.checkAuth(username, password);
+
+        if(auth){
+            res.status(200).set('auth', 'true').sendFile(path.join(p, '/html/mainPage/ui.html'));
+        }else{
+            res.status(401).set('auth', 'false').sendFile(path.join(p, '/html/loginPage/sign-in.html'));
         }
-    })
-    .catch(err=>{
-        console.log(err);
-    })
+    }catch(error){
+        console.log(error);
+        res.status(500).json({ error: 'An error occurred while checking credentials.' });
+    }
 });
+
+// app.get('/checkCredentials', (req, res)=>{
+
+//     db.checkAuth(req.query.username, req.query.password)
+//     .then(auth =>{
+//         if(auth == true){
+//             //add the username and the IP address of the username to db
+//             res.set('auth', 'true');
+//             res.sendFile(path.join(p, '/html/mainPage/ui.html'));
+//         }else{
+//             res.set('auth', 'false');
+//             res.sendFile(path.join(p, '/html/loginPage/sign-in.html'));
+            
+//         }
+//     })
+//     .catch(err=>{
+//         console.log(err);
+//     })
+// });
 
 
 app.get('/sendMessage.js', (req, res)=>{

@@ -44,27 +44,35 @@
 
 
             async function validateForm(){
-              var username = document.getElementById("username");
-              var un = username.value;
+              const username = document.getElementById("username").value;
+              const password1 = document.getElementById("password1").value;
+              const password2 = document.getElementById("password2").value;
 
-              const found = await checkUserExists(un);
-              console.log(found);
+              if(username == '' || password1 == '' || password2== ''){
+                alert("Enter all the three fields.");
+              }else{
+
+              //var un = username.value;
+
+              const found = await checkUserExists(username);
+
               if(found){
                 alert("Username already exists! Choose another username");
                 //return false;
               }else{
-                var password1 = document.getElementById("password1");
-                var ps1 = password1.value;
-                var password2 = document.getElementById("password2");
-                var ps2 = password2.value;
+                
+                //var ps1 = password1.value;
+                
+                //var ps2 = password2.value;
           
-                if(ps1 != ps2){
+                if(password1 != password2){
                   alert("Passwords do not match");
                 }else{
                   // Replace the following code with your actual POST request logic
+                
                   const postData = {
-                    username: un,
-                    password: ps1,
+                    username: username,
+                    password: password1,
                   };
 
                   try {
@@ -92,6 +100,7 @@
                 }
               }
             }
+          }
           </script>
       </div>
     </div>
