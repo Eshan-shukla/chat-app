@@ -1,7 +1,7 @@
 
 const websocket = require('ws');    //same as python import
 const { addMessageIntoDB } = require('./DBOp');
-const wss = new websocket.Server({port:8000});
+const wss = new websocket.Server({port:8000});  
 
 const map = new Map();
 

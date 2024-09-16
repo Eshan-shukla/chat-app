@@ -3,7 +3,7 @@
 <head>
     <title>Chat App</title>
     <!-- <script src="chatDB2.js"></script> -->
-	<script src="http://192.168.1.9:5000/sendMessage.js"></script>
+	<script src="http://eshan.ngrok.io/sendMessage.js"></script>
     <style>
     .container {
     display: flex;
@@ -121,6 +121,10 @@
   justify-content: flex-start;
  } 
 
+ #signout {
+    margin-left: auto;
+ }
+
 
     </style>
 </head>
@@ -144,6 +148,7 @@
         
         
         <div class="message-interface">
+            <button onclick="getSignInPage()" id="signout">Sign out</button>
             <h1 id="username"></h1>
             <!-- Messaging interface goes here -->
 			<div class="chat-messages" id="message-list">

@@ -1,6 +1,6 @@
 //open connection
-const urll = "ws://192.168.1.9:8000";
-const httpUrl = "http://192.168.1.9:5000";
+const urll = "ws://chatws.ngrok.io";
+const httpUrl = "http://eshan.ngrok.io";
 const wsServer = new WebSocket(urll);
 
 
@@ -127,6 +127,10 @@ function addToList(){
     var users = document.getElementById('user-input-field');
     var user = users.value;
 
+    if(user == ''){
+      alert("Enter a username.")
+    }else{
+
     //if user is same as the account username alert about it
     const n = localStorage.getItem("username");
     if(n == user){
@@ -173,6 +177,7 @@ function addToList(){
         console.error('There was a problem with the fetch operation:', error);
       });
     }
+  }
     
 }
 
@@ -240,6 +245,26 @@ fetch(url)
   .catch((error) => {
     console.error('There was a problem with the fetch operation:', error);
   });
+}
+
+async function getSignInPage(){
+  const httpUrlLocal = httpUrl + '/';
+
+  try{
+    const response = await fetch(httpUrlLocal);
+
+    if(!response.ok){
+      throw new Error("HTTP error!");
+    }
+
+    const htmlContent = await response.text();
+    document.open(); // Clear the current document
+    document.write(htmlContent); // Write the new HTML content
+    document.close(); // Close the document for rendering
+
+  }catch(error){
+    console.error('Error:', error); // Handle errors
+  }
 }
 
 

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <link rel="stylesheet" href="http://192.168.1.9:5000/sucss" />
+    <link rel="stylesheet" href="http://eshan.ngrok.io/sucss" />
   </head>
   <body>
     <div class="content">
@@ -23,7 +23,7 @@
             async function checkUserExists(un) {
               try {
                 // Define the URL where the server endpoint for username check is located
-                const url = 'http://192.168.1.9:5000/check?username='+un;
+                const url = 'http://eshan.ngrok.io/check?username='+un;
 
                 // Send an HTTP GET request to the server
                 const response = await fetch(url);
@@ -76,7 +76,7 @@
                   };
 
                   try {
-                    const postResponse = await fetch('http://192.168.1.9:5000/', {
+                    const postResponse = await fetch('http://eshan.ngrok.io/', {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json',

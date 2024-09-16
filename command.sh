@@ -1,7 +1,11 @@
 #!/bin/bash 
 
-node serverFiles/servers/server.js &
-server_pid=$!
+sudo docker start mongodb
 
-node serverFiles/servers/chatSession.js &
-chat_pid=$!
+node /home/eshan/chat-app/serverFiles/servers/server.js &         #paused here (below commands do not execute)
+
+node /home/eshan/chat-app/serverFiles/servers/chatSession.js &
+
+node /home/eshan/my-profile/server.js &
+
+ngrok start --all

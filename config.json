@@ -1,0 +1,6 @@
+{
+    webServer : "http://eshan.ngrok.io/css",
+    
+    chatServer : "ws://df80730a60e6.ngrok.app"
+
+}
